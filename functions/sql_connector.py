@@ -3,7 +3,7 @@ import pandas as pd
 
 
 # Подключаемся к базе данных
-conn = sqlite3.connect('/projects/final_bot/finances.db')
+conn = sqlite3.connect('/app/finances.db')
 c = conn.cursor()
 
 # Функция проверяем наличие таблицы пользователи и если нет - создает ее
