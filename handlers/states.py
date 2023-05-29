@@ -76,9 +76,9 @@ async def amount_chosen(message: Message, state: FSMContext):
     user_data = await state.get_data()
     # Вносим данные в базу данных
     if user_data['operation_chosen'] == 'приход':
-        sql_connector.add_operation(db_user, datetime.now().strftime("%Y-%m-%d"), float(message.text.lower()), 0, str(user_data['bank_chosen']))
+        sql_connector.add_operation(db_user, datetime.now().date(), float(message.text.lower()), 0, str(user_data['bank_chosen']))
     else:
-        sql_connector.add_operation(db_user, datetime.now().strftime("%Y-%m-%d"), 0, float(message.text.lower()), str(user_data['bank_chosen']))
+        sql_connector.add_operation(db_user, datetime.now().date().strftime('%Y-%m-%d'), 0, float(message.text.lower()), str(user_data['bank_chosen']))
     await message.answer(
     text = f"Операция добавлена.\nСумма: {message.text.lower()} \nТип операции: {user_data['operation_chosen']} \nБанк: {user_data['bank_chosen']} {datetime.now().date()}")
     # Сброс состояния и сохранённых данных у пользователя

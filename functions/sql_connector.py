@@ -40,8 +40,9 @@ def get_budget(name):
 # Функция добавления записей в базу данных
 def add_operation(name, is_now, income, expend, bank):
     sql_query = (
-    f'''INSERT INTO {name} ("index", date, income, expend, description, bank)
-    VALUES ({find_count(f'{name}')}, {is_now}, {income}, {expend}, 'test', '{bank}')'''
+    '''INSERT INTO {} ("index", date, income, expend, description, bank)
+    VALUES ({}, {}, {}, {}, 'test', '{}')'''
+    .format(name, find_count(name), is_now, income, expend, bank)
     )
     c.execute(sql_query)
     conn.commit()
