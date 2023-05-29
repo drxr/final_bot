@@ -39,6 +39,6 @@ def xls_converter(src):
                              cell.summ if cell.type == 'расход'
                              else 0, axis=1))
     df = df[['date', 'income', 'expend', 'description', 'bank']]
-    df.to_csv('/projects/final_bot/files/bank_data.csv')
+    df.to_csv('/app/files/bank_data.csv')
     df_message = f'Добавлено {df.shape[0]} записей.'
     return df_message

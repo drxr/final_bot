@@ -49,7 +49,7 @@ async def get_data(message: Message):
     sql_connector.get_budget(message.from_user.username)
     vizualization.draw_pie()
     # Для чтения и отправки файла из файловой системы используем FSInputFile
-    message_from_pc = FSInputFile("/projects/final_bot/files/all_data.csv")
+    message_from_pc = FSInputFile("/app/files/all_data.csv")
     await message.answer_document(message_from_pc)
-    image_from_pc = FSInputFile("/projects/final_bot/files/fig1.png")
+    image_from_pc = FSInputFile("/app/files/fig1.png")
     await message.answer_photo(image_from_pc)

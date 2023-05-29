@@ -9,7 +9,7 @@ router = Router()
 @router.message(F.document)
 async def download_photo(message: Message, bot: Bot):
     file_info = await bot.get_file(message.document.file_id)
-    src = 'C://projects/final_bot/files/' + message.document.file_name
+    src = '/app/files/' + message.document.file_name
     await bot.download_file(file_info.file_path, src)
     test = await bot.download_file(file_info.file_path)
     doc_type = message.document.file_name.split('.')[-1]
@@ -30,6 +30,6 @@ async def download_photo(message: Message, bot: Bot):
             await message.answer(common.xls_converter(src))
     db_user = message.from_user.username
     sql_connector.create_table(db_user)
-    df = pd.read_csv('c://projects/final_bot/files/bank_data.csv', index_col=0)
+    df = pd.read_csv('/app/files/bank_data.csv', index_col=0)
     df.to_sql(db_user, con=sql_connector.conn, if_exists='append')
     await message.answer('конец работы обработчика')

@@ -34,7 +34,7 @@ def get_budget(name):
     sql_query = f'SELECT * FROM {name};'
     df = pd.read_sql(sql_query, con=conn)
     df = df.drop(columns='index')
-    df.to_csv('/projects/final_bot/files/all_data.csv')
+    df.to_csv('/app/files/all_data.csv')
 
 
 # Функция добавления записей в базу данных
