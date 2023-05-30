@@ -8,6 +8,7 @@ from keyboards.main_keyboard import make_row_keyboard
 from functions import sql_connector
 from reports import vizualization
 from handlers.states import ChangeFinances, available_operations
+from bot import path
 
 
 router = Router()
@@ -49,7 +50,7 @@ async def get_data(message: Message):
     sql_connector.get_budget(message.from_user.username)
     vizualization.draw_pie()
     # Для чтения и отправки файла из файловой системы используем FSInputFile
-    message_from_pc = FSInputFile("/app/files/all_data.csv")
+    message_from_pc = FSInputFile(f"/{path}/files/all_data.csv")
     await message.answer_document(message_from_pc)
-    image_from_pc = FSInputFile("/app/files/fig1.png")
+    image_from_pc = FSInputFile(f"/{path}/files/fig1.png")
     await message.answer_photo(image_from_pc)

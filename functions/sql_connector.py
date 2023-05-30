@@ -1,9 +1,11 @@
 import sqlite3 
 import pandas as pd
 
+from bot import path
+
 
 # Подключаемся к базе данных
-conn = sqlite3.connect('/app/finances.db')
+conn = sqlite3.connect(f'/{path}/finances.db')
 c = conn.cursor()
 
 # Функция проверяем наличие таблицы пользователи и если нет - создает ее
@@ -34,7 +36,7 @@ def get_budget(name):
     sql_query = f'SELECT * FROM {name};'
     df = pd.read_sql(sql_query, con=conn)
     df = df.drop(columns='index')
-    df.to_csv('/app/files/all_data.csv')
+    df.to_csv(f'/{path}/files/all_data.csv')
 
 
 # Функция добавления записей в базу данных
