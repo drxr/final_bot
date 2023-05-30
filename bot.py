@@ -1,3 +1,4 @@
+import os
 import logging
 import asyncio
 from aiogram import Bot, Dispatcher
@@ -8,6 +9,7 @@ from config_reader import config
 
 # Ведение логов
 logging.basicConfig(level=logging.INFO)
+path = os.getcwd()
 
 
 # функция для запуска бота
