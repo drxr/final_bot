@@ -1,7 +1,8 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from functions.common import get_dates_from_data
 
 
-# основная клавиатура для внесения операций
+# Основная клавиатура для внесения операций
 def make_row_keyboard(items: list[str]) -> ReplyKeyboardMarkup:
     """
     Создаёт реплай-клавиатуру с кнопками в один ряд
@@ -10,3 +11,11 @@ def make_row_keyboard(items: list[str]) -> ReplyKeyboardMarkup:
     """
     row = [KeyboardButton(text=item) for item in items]
     return ReplyKeyboardMarkup(keyboard=[row], resize_keyboard=True)
+
+
+# Клавиатура выбора месяца отчета
+
+
+
+# Клавиатура выбора года отчета
+
