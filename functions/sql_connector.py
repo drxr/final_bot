@@ -1,7 +1,7 @@
 import sqlite3 
 import pandas as pd
 
-from bot import path
+from path import path
 
 
 # Подключаемся к базе данных
@@ -43,7 +43,7 @@ def get_budget(name):
 def add_operation(name, is_now, income, expend, bank):
     sql_query = (
     '''INSERT INTO {} ("index", date, income, expend, description, bank)
-    VALUES ({}, {}, {}, {}, 'test', '{}')'''
+    VALUES ({}, '{}', {}, {}, 'test', '{}')'''
     .format(name, find_count(name), is_now, income, expend, bank)
     )
     c.execute(sql_query)

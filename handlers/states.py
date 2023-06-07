@@ -5,7 +5,8 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from datetime import datetime
 
-from keyboards.main_keyboard import make_row_keyboard
+from keyboards.main_keyboard import make_row_keyboard, make_years_keyboard
+from functions.common import get_dates_from_data
 from functions import sql_connector
 
 
@@ -15,11 +16,19 @@ router = Router()
 available_operations = ["Приход", "Расход", "Отмена"]
 available_banks = ["ВТБ", "Сбер", "Тинькофф", "Другой банк", "Отмена"]
 
+
 # Класс FSM для пошагового внесения операций
 class ChangeFinances(StatesGroup):
     choosing_operation = State()
     choosing_bank = State()
     input_amount = State()
+
+
+# FSM для выбора периода для отчета
+class MakeReport(StatesGroup):
+    choosing_month = State()
+    choosing_year = State()
+
 
 # Операция отмены на текст
 @router.message(Text(text="Отмена", ignore_case=True))
@@ -28,6 +37,7 @@ async def cmd_cancel(message: Message, state: FSMContext):
     await message.answer(
         text="Действие отменено",
         reply_markup=ReplyKeyboardRemove())
+
 
 # Этап выбора операции - корректно
 @router.message(ChangeFinances.choosing_operation, F.text.in_(available_operations))
@@ -39,6 +49,7 @@ async def operation_chosen(message: Message, state: FSMContext):
     )
     await state.set_state(ChangeFinances.choosing_bank)
 
+
 # Этап выбора операции - некорректно
 @router.message(ChangeFinances.choosing_operation)
 async def operation_chosen_incorrectly(message: Message):
@@ -47,6 +58,7 @@ async def operation_chosen_incorrectly(message: Message):
              "Пожалуйста, выберите одно из названий из списка ниже:",
         reply_markup=make_row_keyboard(available_operations)
     )
+
 
 # Этап выбора банка - корректно
 @router.message(ChangeFinances.choosing_bank, F.text.in_(available_banks))
@@ -58,6 +70,7 @@ async def bank_chosen(message: Message, state: FSMContext):
     )
     await state.set_state(ChangeFinances.input_amount)
 
+
 # Этап выбора банка - некорректно
 @router.message(ChangeFinances.choosing_bank)
 async def bank_chosen_incorrectly(message: Message):
@@ -66,6 +79,7 @@ async def bank_chosen_incorrectly(message: Message):
              "Пожалуйста, выберите один из вариантов из списка ниже:",
         reply_markup=make_row_keyboard(available_banks)
     )
+
 
 # Этап ввода суммы операции
 @router.message(ChangeFinances.input_amount)
@@ -76,9 +90,39 @@ async def amount_chosen(message: Message, state: FSMContext):
     user_data = await state.get_data()
     # Вносим данные в базу данных
     if user_data['operation_chosen'] == 'приход':
-        sql_connector.add_operation(db_user, datetime.now().date(), float(message.text.lower()), 0, str(user_data['bank_chosen']))
+        sql_connector.add_operation(db_user, datetime.now().date(), 
+                                    float(message.text.lower()), 0, 
+                                    str(user_data['bank_chosen']))
     else:
-        sql_connector.add_operation(db_user, datetime.now().date().strftime('%Y-%m-%d'), 0, float(message.text.lower()), str(user_data['bank_chosen']))
+        sql_connector.add_operation(db_user, datetime.now().date().strftime('%Y-%m-%d'), 
+                                    0, float(message.text.lower()), 
+                                    str(user_data['bank_chosen']))
+    await message.answer(
+    text = f"Операция добавлена.\nСумма: {message.text.lower()} \nТип операции: {user_data['operation_chosen']} \nБанк: {user_data['bank_chosen']} {datetime.now().date()}")
+    # Сброс состояния и сохранённых данных у пользователя
+    await state.clear()
+
+
+# Этап выбора месяца
+@router.message(MakeReport.choosing_month)
+async def operation_chosen(message: Message, state: FSMContext):
+    db_user = message.from_user.username
+    available_years = get_dates_from_data(db_user)[1]
+    await state.update_data(month_chosen=message.text.lower())
+    await message.answer(
+        text="Спасибо. Теперь, пожалуйста, выберите год:",
+        reply_markup=make_years_keyboard(available_years)
+    )
+    await state.set_state(MakeReport.choosing_year)
+
+
+# Этап выбора года
+@router.message(MakeReport.choosing_year)
+async def operation_chosen(message: Message, state: FSMContext):
+    db_user = message.from_user.username
+    user_data = await state.get_data()
+    user_data['month_chosen']
+    float(message.text.lower())
     await message.answer(
     text = f"Операция добавлена.\nСумма: {message.text.lower()} \nТип операции: {user_data['operation_chosen']} \nБанк: {user_data['bank_chosen']} {datetime.now().date()}")
     # Сброс состояния и сохранённых данных у пользователя

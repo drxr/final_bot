@@ -4,11 +4,12 @@ from aiogram.filters.text import Text
 from aiogram.types import Message, ReplyKeyboardRemove, FSInputFile
 from aiogram.fsm.context import FSMContext
 
-from keyboards.main_keyboard import make_row_keyboard
+from keyboards.main_keyboard import make_row_keyboard, months_keyboard
 from functions import sql_connector
 from reports import vizualization
 from handlers.states import ChangeFinances, available_operations
-from bot import path
+from functions.common import get_dates_from_data
+from path import path
 
 
 router = Router()
@@ -54,3 +55,18 @@ async def get_data(message: Message):
     await message.answer_document(message_from_pc)
     image_from_pc = FSInputFile(f"/{path}/files/fig1.png")
     await message.answer_photo(image_from_pc)
+
+
+# Точка входа в FSM (последовательные шаги для отчетов) команда stats
+@router.message(Command("stats"))
+async def cmd_operation(message: Message, state: FSMContext):
+    available_months = get_dates_from_data(message.from_user.username)[0]
+    print(available_months)
+    await message.answer(
+        text="Выберите период:",
+        # клавиатура для ответа из файла keyboards, переменная для клавиатуры из файла states
+        # см. импорты
+        reply_markup=months_keyboard
+    )
+    # Устанавливаем пользователю состояние "выбирает операцию"
+    await state.set_state(ChangeFinances.choosing_year)

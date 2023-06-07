@@ -3,7 +3,7 @@ from aiogram.types import Message
 from functions import common, vtb, tinkoff, sql_connector
 import pandas as pd
 
-from bot import path
+from path import path
 
 
 router = Router()
@@ -11,7 +11,7 @@ router = Router()
 
 # Обработчик документов, которые кидают в чат боту
 @router.message(F.document)
-async def download_photo(message: Message, bot: Bot):
+async def download_file(message: Message, bot: Bot):
     file_info = await bot.get_file(message.document.file_id)
     src = f'/{path}/files/' + message.document.file_name
     await bot.download_file(file_info.file_path, src)

@@ -3,7 +3,7 @@ import seaborn as sns
 import pandas as pd
 from functions import sql_connector
 
-from bot import path
+from path import path
 
 
 def draw_pie():
