@@ -57,7 +57,7 @@ async def get_data(message: Message):
 # Обработчик команды get_graph
 # Возвращает график
 @router.message(Command("get_graph"))
-async def get_data(message: Message):
+async def get_graph(message: Message):
     sql_connector.get_budget(message.from_user.username)
     vizualization.draw_pie()
     # Для чтения и отправки файла из файловой системы используем FSInputFile
