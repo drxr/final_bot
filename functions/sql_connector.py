@@ -1,11 +1,11 @@
-import sqlite3 
+import psycopg2
 import pandas as pd
 
 from path import path
 
 
 # Подключаемся к базе данных
-conn = sqlite3.connect(f'/{path}/finances.db')
+conn = psycopg2.connect(dbname='cashbot', user='drxr', password='mnkslnd1981', host='127.0.0.1')
 c = conn.cursor()
 
 # Функция проверяем наличие таблицы пользователи и если нет - создает ее
@@ -43,7 +43,7 @@ def get_budget(name):
 def add_operation(name, is_now, income, expend, bank):
     sql_query = (
     '''INSERT INTO {} ("index", date, income, expend, description, bank)
-    VALUES ({}, '{}', {}, {}, 'test', '{}')'''
+    VALUES ({}, '{}', '{}', {}, 'test', '{}')'''
     .format(name, find_count(name), is_now, income, expend, bank)
     )
     c.execute(sql_query)

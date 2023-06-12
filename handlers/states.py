@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from datetime import datetime
 
-from keyboards.main_keyboard import make_row_keyboard, make_years_keyboard
+from keyboards.main_keyboard import make_row_keyboard
 from functions.common import get_dates_from_data
 from functions import sql_connector
 

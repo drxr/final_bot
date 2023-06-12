@@ -4,7 +4,7 @@ from aiogram.filters.text import Text
 from aiogram.types import Message, ReplyKeyboardRemove, FSInputFile
 from aiogram.fsm.context import FSMContext
 
-from keyboards.main_keyboard import make_row_keyboard, months_keyboard
+from keyboards.main_keyboard import make_row_keyboard
 from functions import sql_connector
 from reports import vizualization
 from handlers.states import ChangeFinances, available_operations
@@ -45,14 +45,22 @@ async def cmd_operation(message: Message, state: FSMContext):
     await state.set_state(ChangeFinances.choosing_operation)
 
 # Обработчик команды get_data
-# Возвращает всю базу данных в виде csv файла (дополнительно отправляет график)
+# Возвращает всю базу данных в виде csv файла
+@router.message(Command("get_data"))
+async def get_data(message: Message):
+    sql_connector.get_budget(message.from_user.username)
+    # Для чтения и отправки файла из файловой системы используем FSInputFile
+    message_from_pc = FSInputFile(f"/{path}/files/all_data.csv")
+    await message.answer_document(message_from_pc)
+
+
+# Обработчик команды get_graph
+# Возвращает график
 @router.message(Command("get_data"))
 async def get_data(message: Message):
     sql_connector.get_budget(message.from_user.username)
     vizualization.draw_pie()
     # Для чтения и отправки файла из файловой системы используем FSInputFile
-    message_from_pc = FSInputFile(f"/{path}/files/all_data.csv")
-    await message.answer_document(message_from_pc)
     image_from_pc = FSInputFile(f"/{path}/files/fig1.png")
     await message.answer_photo(image_from_pc)
 
