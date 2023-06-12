@@ -56,7 +56,7 @@ async def get_data(message: Message):
 
 # Обработчик команды get_graph
 # Возвращает график
-@router.message(Command("get_data"))
+@router.message(Command("get_graph"))
 async def get_data(message: Message):
     sql_connector.get_budget(message.from_user.username)
     vizualization.draw_pie()
@@ -74,7 +74,7 @@ async def cmd_operation(message: Message, state: FSMContext):
         text="Выберите период:",
         # клавиатура для ответа из файла keyboards, переменная для клавиатуры из файла states
         # см. импорты
-        reply_markup=months_keyboard
+        reply_markup=make_row_keyboard(available_operations)
     )
     # Устанавливаем пользователю состояние "выбирает операцию"
     await state.set_state(ChangeFinances.choosing_year)
