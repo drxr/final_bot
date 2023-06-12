@@ -35,5 +35,5 @@ async def download_file(message: Message, bot: Bot):
     db_user = message.from_user.username
     sql_connector.create_table(db_user)
     df = pd.read_csv(f'/{path}/files/bank_data.csv', index_col=0)
-    df.to_sql(db_user, con=sql_connector.conn, if_exists='append')
+    df.to_sql(db_user, con=sql_connector.engine, if_exists='append')
     await message.answer('конец работы обработчика')
