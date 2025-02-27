@@ -7,7 +7,7 @@ from path import path
 # Подключаемся к базе данных
 conn = psycopg2.connect(dbname='cashbot', user='drxr', password='', host='127.0.0.1')
 c = conn.cursor()
-connect_string = 'postgreaql://drxr:mnkslnd1981@127.0.0.1:5432/cashbot'
+connect_string = 'postgreaql://drxr:password@127.0.0.1:5432/cashbot'
 engine = create_engine(connect_string)
 # Функция проверяем наличие таблицы пользователи и если нет - создает ее
 def create_table(name):
