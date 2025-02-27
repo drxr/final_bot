@@ -5,7 +5,7 @@ from path import path
 
 
 # Подключаемся к базе данных
-conn = psycopg2.connect(dbname='cashbot', user='drxr', password='mnkslnd1981', host='127.0.0.1')
+conn = psycopg2.connect(dbname='cashbot', user='drxr', password='', host='127.0.0.1')
 c = conn.cursor()
 connect_string = 'postgreaql://drxr:mnkslnd1981@127.0.0.1:5432/cashbot'
 engine = create_engine(connect_string)
